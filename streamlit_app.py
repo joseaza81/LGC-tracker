@@ -104,6 +104,7 @@ def load_data(path: str = None) -> pd.DataFrame:
     df["volume_lgc"] = pd.to_numeric(df["volume_lgc"], errors="coerce").fillna(0)
     return df
 
+st.write(os.listdir(os.path.dirname(__file__)))
 df_all = load_data()
 
 # ── Sidebar filters ───────────────────────────────────────────────────────────
