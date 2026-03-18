@@ -141,7 +141,8 @@ def fetch_day(query_date: date, retries: int = 3) -> list[dict]:
                 return []
 
             # Filter: only process dict items, LGC transfers only
-            transfers = [
+          print(f"  Raw response sample: {str(records[:2])}")  
+          transfers = [
                 r for r in records
                 if isinstance(r, dict)
                 and r.get("certificateType") == "LGC"
