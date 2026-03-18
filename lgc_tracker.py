@@ -125,14 +125,13 @@ def infer_parent(account_name: str) -> str:
 def fetch_day(query_date: date, retries: int = 3) -> list[dict]:
     date_str = query_date.strftime("%Y-%m-%d")
     url = f"{API_BASE}?date={date_str}"
-    
+
     for attempt in range(1, retries + 1):
         try:
             resp = requests.get(url, timeout=30)
             resp.raise_for_status()
             data = resp.json()
 
-            # API may return a dict with a list inside, or a bare list
             if isinstance(data, dict):
                 records = data.get("data", data.get("results", data.get("certificateActions", [])))
             elif isinstance(data, list):
@@ -140,9 +139,9 @@ def fetch_day(query_date: date, retries: int = 3) -> list[dict]:
             else:
                 return []
 
-            # Filter: only process dict items, LGC transfers only
-          print(f"  Raw response sample: {str(records[:2])}")  
-          transfers = [
+            print(f"  Raw response sample: {str(records[:2])}")
+
+            transfers = [
                 r for r in records
                 if isinstance(r, dict)
                 and r.get("certificateType") == "LGC"
@@ -154,6 +153,7 @@ def fetch_day(query_date: date, retries: int = 3) -> list[dict]:
             print(f"  [attempt {attempt}/{retries}] Error fetching {date_str}: {e}")
             if attempt < retries:
                 time.sleep(2 ** attempt)
+
     return []
 
 
