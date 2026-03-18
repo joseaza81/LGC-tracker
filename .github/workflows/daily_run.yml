@@ -4,7 +4,8 @@ on:
   schedule:
     - cron: '0 1 * * *'  # runs 1am UTC = ~11am AEST
   workflow_dispatch:       # lets you also trigger it manually
-
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
   fetch:
     runs-on: ubuntu-latest
