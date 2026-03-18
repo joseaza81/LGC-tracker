@@ -87,7 +87,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ── Load data ─────────────────────────────────────────────────────────────────
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=0)
 def load_data(path: str = None) -> pd.DataFrame:
     if path is None:
         path = os.path.join(os.path.dirname(__file__), "lgc_transfer_data.json")
