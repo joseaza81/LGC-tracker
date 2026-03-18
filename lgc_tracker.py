@@ -123,11 +123,6 @@ def infer_parent(account_name: str) -> str:
 
 # ── API fetch ────────────────────────────────────────────────────────────────
 def fetch_day(query_date: date, retries: int = 3) -> list[dict]:
-    """
-    Fetch all certificate actions for a given date.
-    API has 1-day latency — always query yesterday or earlier.
-    Returns list of transfer-only LGC actions.
-    """
     date_str = query_date.strftime("%Y-%m-%d")
     url = f"{API_BASE}?date={date_str}"
     
@@ -136,13 +131,24 @@ def fetch_day(query_date: date, retries: int = 3) -> list[dict]:
             resp = requests.get(url, timeout=30)
             resp.raise_for_status()
             data = resp.json()
-            # Filter: LGC transfers only
+
+            # API may return a dict with a list inside, or a bare list
+            if isinstance(data, dict):
+                records = data.get("data", data.get("results", data.get("certificateActions", [])))
+            elif isinstance(data, list):
+                records = data
+            else:
+                return []
+
+            # Filter: only process dict items, LGC transfers only
             transfers = [
-                r for r in data
-                if r.get("certificateType") == "LGC"
+                r for r in records
+                if isinstance(r, dict)
+                and r.get("certificateType") == "LGC"
                 and r.get("actionType") in ("Transfer offer", "Transfer accept")
             ]
             return transfers
+
         except requests.RequestException as e:
             print(f"  [attempt {attempt}/{retries}] Error fetching {date_str}: {e}")
             if attempt < retries:
