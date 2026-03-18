@@ -15,6 +15,7 @@ Requirements (add to requirements.txt):
   pandas
 """
 
+import os
 import json
 from datetime import date, timedelta
 from pathlib import Path
@@ -87,7 +88,9 @@ st.markdown("""
 
 # ── Load data ─────────────────────────────────────────────────────────────────
 @st.cache_data(ttl=3600)
-def load_data(path: str = "lgc_transfer_data.json") -> pd.DataFrame:
+def load_data(path: str = None) -> pd.DataFrame:
+    if path is None:
+        path = os.path.join(os.path.dirname(__file__), "lgc_transfer_data.json")
     if not Path(path).exists():
         return pd.DataFrame()
     with open(path) as f:
