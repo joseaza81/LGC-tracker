@@ -91,7 +91,8 @@ st.markdown("""
 def load_data(path: str = None) -> pd.DataFrame:
     if path is None:
         path = os.path.join(os.path.dirname(__file__), "lgc_transfer_data.json")
-    if not Path(path).exists():
+    if not os.path.exists(path):
+        st.error(f"File not found: {path}")
         return pd.DataFrame()
     with open(path) as f:
         cache = json.load(f)
