@@ -10,6 +10,9 @@ st.set_page_config(page_title="LGC Transfer Tracker", page_icon="⚡", layout="w
 HERE = Path(__file__).parent
 DATA = HERE / "lgc_transfer_data.json"
 
+st.write(str(DATA))
+st.write(DATA.exists())
+
 if not DATA.exists():
     st.error(f"Cannot find data file at: {DATA}")
     st.stop()
