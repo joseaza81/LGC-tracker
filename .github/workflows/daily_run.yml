@@ -20,7 +20,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run tracker
-        run: python lgc_tracker.py --backfill
+        run: python lgc_tracker.py --backfill --start 2026-01-01 --end 2026-03-18
 
       - name: Commit updated data
         run: |
